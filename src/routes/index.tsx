@@ -1,0 +1,26 @@
+import React from 'react'
+import { ToastContainer } from "react-toastify";
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Home from '../pages/Home';
+import Station from '../pages/Station';
+import Tank from '../pages/Tank';
+import Island from '../pages/Island';
+import CreateIsland from 'src/pages/CreateIsland';
+
+import "react-toastify/dist/ReactToastify.css";
+const Routes = () => {
+    return (
+        <BrowserRouter>
+        <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/station" component={Station} />
+            <Route exact path="/tank" component={Tank} />
+            <Route exact path="/createIsland" component={CreateIsland} />
+            <Route exact path="/island" component={Island} />
+        </Switch>
+        <ToastContainer/>
+    </BrowserRouter>
+    )
+}
+
+export default Routes
