@@ -1,20 +1,29 @@
-import React from 'react';
-import {IPropsTank} from './interface';
+// Dependencies
+import React , {useState,useEffect} from 'react';
 import { Formik, Field, Form, ErrorMessage } from "formik";
+
+//Types
 import {types_tank} from '../../constant/options';
+import {IPropsTank,formSchema} from './interface';
+import {ITile} from '../../components/ListTile/interface';
 
-import {unitsToMeters} from '../../utils/units-convertert';
-import * as Yup from "yup";
-/* 
-import {showAlertError} from '../../utils/toast';
-
-import {createTank} from '../../api/services/tankService'; */
-
+//Components
 import Header from '../../components/Header';
 import SelectSearch from '../../components/SelectSearch';
 import Stepper from '../../components/Stepper';
-const Tank = (props:IPropsTank) => {
+import ListTile from 'src/components/ListTile';
+//utils
+/* 
+import {showAlertError} from '../../utils/toast';
+*/
+import {unitsToMeters} from '../../utils/units-convertert';
+//Services
+/* import {createTank} from '../../api/services/tankService'; 
+ */
 
+const Tank = (props:IPropsTank) => {
+    const [tanks, setTanks] = useState<ITile[]>([]);
+    const [refresh, setRefresh] = useState(0);
     const initialValues = {
         type:"",
         price:"",
@@ -27,36 +36,15 @@ const Tank = (props:IPropsTank) => {
         min:"",
         max:"",
     }
-    const formSchema = Yup.object().shape({
-        type: Yup.string()
-            .required("Campo Requerido"),
-        price: Yup.number()
-            .positive("El valor debe ser positivo") 
-            .required("Campo Requerido"),
-        width: Yup.number()
-            .positive("El valor debe ser positivo") 
-            .required("Campo Requerido"),
-        heigth: Yup.number()
-            .positive("El valor debe ser positivo") 
-            .required("Campo Requerido"),
-        actualvalue: Yup.number()
-            .positive("El valor debe ser positivo") 
-            .required("Campo Requerido"),
-        maxHeight: Yup.number()
-            .positive("El valor debe ser positivo") 
-            .required("Campo Requerido"),
-        units_dimension: Yup.string()
-            .required("Campo Requerido"),
-        units_max_heigth: Yup.string()
-            .required("Campo Requerido"),
-        min: Yup.number()
-            .positive("El valor debe ser positivo") 
-            .required("Campo Requerido"),
-        max: Yup.number()
-            .positive("El valor debe ser positivo") 
-            .required("Campo Requerido"),
-      });
-    console.log(props); 
+
+    useEffect(()=>{
+
+        (async ()=>{
+            setTanks([{title:'APM'},{title:'Corriente'},{title:'APM'},{title:'EXTRA'} ])
+            console.log('refresh render')
+        })();
+    },[refresh])
+    
     const submit = (values)=>{
         const stationId = localStorage.getItem('idStation'); 
         const {type,price,min,max,actualvalue ,units_dimension,units_max_heigth} = values;
@@ -79,9 +67,15 @@ const Tank = (props:IPropsTank) => {
             },
             maxHeight,
         }
-
-        console.log(newTank)
+        setRefresh((refresh) =>refresh+1);
+        console.log(newTank, "tank")
+        
     }
+
+    const onDelete = () => {
+        setRefresh((refresh) =>refresh-1);
+    }
+
     return (
         <div className='container-fluid p-0'>
             <Header title='Tanque'/>
@@ -92,6 +86,7 @@ const Tank = (props:IPropsTank) => {
                 validationSchema={formSchema}
             >
                 <Form className='container'>
+                    <h1 className='mb-4 mt-4'>Tanques</h1>
                     <div className='row'>
                             <div className="form-group col-md-6">
                                 <label htmlFor="input_type-tank">Tipo de tanque</label>
@@ -266,10 +261,21 @@ const Tank = (props:IPropsTank) => {
                             </div>
                         </div>    
                     </div>
-                    <div className="col-12 d-flex justify-content-between mt-4">
+                    <div className="col-12 d-flex justify-content-between mt-4 mb-4">
+                        <button className="btn btn-primary" type="button" onClick={()=>props.history.push('/station')}>Anterior</button>
                         <button className="btn btn-primary" type="submit">Crear</button>
-                        {/* <button className="btn btn-primary" onClick={next}>Siguiente</button>
-                     */}
+                        <button className="btn btn-primary" type="button" onClick={()=>props.history.push('/island')}>Siguiente</button>
+                    </div>
+
+                    <div className="row mb-4 mt-4">
+                        {   tanks.length?
+                            <ListTile list={tanks}  onDelete={onDelete}/>
+                            :
+                            <div className="col-12">
+                                <p className="text-muted text-center mb-4 mt-4 ">No hay Tanques disponibles</p>
+                            </div>
+                        }
+                        
                     </div>
 
                 </Form>
@@ -279,109 +285,4 @@ const Tank = (props:IPropsTank) => {
     )
 }
 
-export default Tank
-
-
-
-/* 
-
-<div className="form-group">
-                            <label htmlFor="input-dimension">Dimension</label>
-                            <div className="d-flex">
-                                <input type="number" 
-                                    placeholder="Ancho" 
-                                    name='width' 
-                                    className="form-control mr-2" 
-                                    onChange={onChange}
-                                    id="input-dimension"
-                                />
-
-                                <input type="number" 
-                                    placeholder="Altura" 
-                                    name='heigth' 
-                                    className="form-control mr-4" 
-                                    onChange={onChange}
-                                />
-                                <select name="units_dimension" 
-                                        className="form-control"
-                                        onChange={onChange}
-                                        >
-                                    <option value="">Selecciona...</option>
-                                    <option value="cm">CM</option>
-                                    <option value="ft">FT</option>
-                                    <option value="m">M</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="input_current-gal">Galones actual</label>
-                            <div className="d-flex">
-                            <input type="number" 
-                                    placeholder="0" 
-                                    name='actualvalue' 
-                                    className="form-control" 
-                                    id="input_current-gal"
-                                    onChange={onChange}
-                                />
-                                <div className="input-group-append">
-                                    <span className="input-group-text">gal</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <div className="form-group">
-                            <label htmlFor="input_price">Precio</label>
-                            <input type="number" 
-                                placeholder="0" 
-                                name='price' 
-                                className="form-control" 
-                                id="input_price"
-                                onChange={onChange}/>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="input_min-capacity">Capacidad</label>
-                            <div className="d-flex">
-                                <input type="number" 
-                                    placeholder="Minima" 
-                                    name='min' 
-                                    className="form-control" 
-                                    id="input_min-capacity"
-                                    onChange={onChange}
-                                />
-                                <div className="input-group-append mr-2">
-                                    <span className="input-group-text">gal</span>
-                                </div>
-                                <input type="number" 
-                                    placeholder="Maxima" 
-                                    name='max' 
-                                    className="form-control" 
-                                    onChange={onChange}
-                                />
-                                <div className="input-group-append">
-                                    <span className="input-group-text">gal</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="input-max-heigth">Altura maxima</label>
-                            <div className="d-flex">
-                                <input type="number" 
-                                    placeholder="0" 
-                                    name='maxHeight' 
-                                    className="form-control mr-4" 
-                                    id="input-max-heigth"
-                                    onChange={onChange}
-                                />
-                                <select name="units_max_heigth" 
-                                        className="form-control"
-                                        onChange={onChange}
-                                        >
-                                    <option value="cm">Selecciona...</option>
-                                    <option value="cm">CM</option>
-                                    <option value="ft">FT</option>
-                                    <option value="m">M</option>
-                                </select>
-                            </div>
-                        </div>
-
-*/
+export default Tank;

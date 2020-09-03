@@ -19,19 +19,26 @@ const StepperCostum = (props:IPropsStepper) => {
         title: 'Isla',
         onClick: (e:MouseEvent) => {
           e.preventDefault()
-          props.history.push('/createIsland')
+          props.history.push('/island')
         }
       }, {
-        title: 'Surtidores y Mangueras',
+        title: 'Surtidores',
         onClick: (e:MouseEvent) => {
           e.preventDefault()
-          props.history.push('/island')
+          props.history.push('/pump')
+        }
+      },
+      {
+        title: 'Mangueras',
+        onClick: (e:MouseEvent) => {
+          e.preventDefault()
+          props.history.push('/hose')
         }
       }
     ]
     return (
         <div className="mb-4">
-            <Stepper steps={ steps } activeColor={'#033246'} completeColor={'#ffc107'}  circleFontSize={14} lineMarginOffset={20} activeStep={ props.current} />
+            <Stepper steps={ steps } completeBarColor="#ffc107"  activeColor={'#033246'} completeColor={'#ffc107'}  circleFontSize={14} lineMarginOffset={20} activeStep={ props.current} />
         </div>
     )
 }
