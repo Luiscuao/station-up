@@ -4,9 +4,9 @@ export const factors = [
 ];
 
 export const types_tank = [
-    {value:'ACPM',label:'ACPM'} ,  
-    {value:'EXTRA',label:'EXTRA'},
-    {value:'CORRIENTE',label:'CORRIENTE'}
+    {value: 5,label:'ACPM'} ,  
+    {value: 3,label:'EXTRA'},
+    {value: 1,label:'CORRIENTE'}
 ];
 export const protocolConcentrator = [
     {value:'1',label:'PROTOCOLO PUMPCONTROL'} ,  
@@ -15,6 +15,10 @@ export const protocolConcentrator = [
 export const statePump = [
     {value:'0',label:'Inactivo'} ,  
     {value:'1',label:'Activo'},
+];
+export const serialport = [
+    {value:'1',label:'1'} ,  
+    {value:'2',label:'2'},
 ];
 export const tanks = [
     {value:'0',label:'ACPM'} ,  
@@ -35,9 +39,8 @@ export const islands =[
     {value:'3',label:'Isla 4'}
 ]
 
-export const face = [
-    {value:'0',label:'Cara 1'},  
-    {value:'1',label:'Cara 2'},
-    {value:'2',label:'Cara 3'},
-    {value:'3',label:'Cara 4'}
+export const degree = [
+    {value:'0',label:'Grado 1'},  
+    {value:'1',label:'Grado 2'},
+    {value:'2',label:'Grado 3'},
 ];

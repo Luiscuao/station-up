@@ -25,3 +25,12 @@ export const getIslandByStation = async (id:string)=> {
     const islands = response.data;
     return islands;
 }
+
+export const deleteIslandByStation = async (id:string)=> {
+    const url = `/station/island/${id}`
+    await axios(
+            {
+                method: "delete",
+                url: url,
+            });
+}

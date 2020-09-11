@@ -1,7 +1,5 @@
 import React from 'react';
-import {IPropsHeader} from './interface';
-const Header = (props:IPropsHeader) => {
-    console.log(props)
+const Header = () => {
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-primary sticky-top mb-4">
             <span className="navbar-brand ml-4">

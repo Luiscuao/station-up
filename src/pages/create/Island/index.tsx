@@ -4,49 +4,65 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 
 //Types
 import {IPropsCreateIsland,formSchema} from './interface';
-import {ITile} from '../../components/ListTile/interface';
+import {ITile} from '../../../components/ListTile/interface';
 
 //services
-/* import {createIsland} from '../../api/services/islandService' */
+import {getIslandByStation,createIsland,deleteIslandByStation} from '../../../api/services/islandService'
 
 //components
-import Header from '../../components/Header';
-import Stepper from 'src/components/Stepper';
-import ListTile from 'src/components/ListTile';
+import Header from '../../../components/Header';
+import Stepper from '../../../components/Stepper';
+import ListTile from '../../../components/ListTile';
 
+//utils
+import {showAlertError,showAlertSuccess} from '../../../utils/toast';
 
 
 const CreateIsland = (props: IPropsCreateIsland) => {
     const [island, setIsland] = useState<ITile[]>([]);
     const [refresh, setRefresh] = useState(0);
+
     const initialValues = {
         name:"",
     }
 
     useEffect(()=>{
-
         (async ()=>{
-            setIsland([{title:'Isla 1'},{title:'Isla 2'},{title:'Isla 3'}])
-            console.log('refresh render')
+            const id = localStorage.getItem('idStation')||'';
+            const response = await getIslandByStation(id);
+            const island = response.map(island => ({title:island.name,id:island._id}))
+            setIsland(island)
         })();
-    },[refresh])
-    const submit = async(values)=>{
+    },[refresh]);
+
+    const submit = (values,{resetForm})=>{
         const station = localStorage.getItem('idStation');
 
         const newIsland = {
             station,
             name:values.name
         }
-        console.log(newIsland)
-       /*  await createIsland(newIsland); */
+        createIsland(newIsland).then(() => {
+            setRefresh((refresh) =>refresh+1);
+            showAlertSuccess('Creado Exitosamente');
+            resetForm(initialValues);
+        }).catch(() =>{
+            showAlertError('Error al crear la isla');
+        });
     }
-    const onDelete = () => {
-        setRefresh((refresh) =>refresh-1);
+    const onDelete = (id:string) => {
+        deleteIslandByStation(id).then(() =>{
+            setRefresh((refresh) =>refresh-1);
+            showAlertSuccess('Eliminado Exitosamente');
+        }).catch(() =>{
+            showAlertError('Error al Eliminar la isla');
+        });
+        
     }
     return (
         <>
-        <Header title="Island"/>
-        <Stepper current={2}/>
+        <Header />
+        <Stepper current={3}/>
         <Formik
             initialValues={initialValues}
             onSubmit={submit}
@@ -72,9 +88,9 @@ const CreateIsland = (props: IPropsCreateIsland) => {
                             /> 
                         </div>
                         <div className="col-12 d-flex justify-content-between mt-4 p-0">
-                            <button className="btn btn-primary"  type="button" onClick={()=>props.history.push('/tank')}>Anterior</button>
+                            <button className="btn btn-primary"  type="button" onClick={()=>props.history.push('/create/tank')}>Anterior</button>
                             <button className="btn btn-primary" type="submit">Crear</button>
-                            <button className="btn btn-primary"onClick={()=>props.history.push('/pump')}>Siguiente</button>
+                            <button className="btn btn-primary"onClick={()=>props.history.push('/create/pump')}>Siguiente</button>
                         </div>
                     </div>
                 </div>
@@ -83,11 +99,11 @@ const CreateIsland = (props: IPropsCreateIsland) => {
                             <ListTile list={island}  onDelete={onDelete}/>
                             :
                             <div className="col-12">
-                                <p className="text-muted text-center mb-4 mt-4 ">No hay Tanques disponibles</p>
+                                <p className="text-muted text-center mb-4 mt-4 ">No hay Islas disponibles</p>
                             </div>
                         }
                         
-                    </div>
+                </div>
             </Form>
         </Formik>
         </>

@@ -8,7 +8,7 @@ const ListTile = (props: IpropsListTile) => {
     <ul className="list-group col-12 mt-4 mb-4">
         {
           list.map((tile,index) =>(
-            <Tile title={tile.title} onDelete={onDelete} key={index} />
+            <Tile title={tile.title} subtitle={tile.subtitle} id={tile.id} onDelete={onDelete} key={index} />
           ))
         }
     </ul>

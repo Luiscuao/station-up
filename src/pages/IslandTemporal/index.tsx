@@ -120,7 +120,7 @@ const Island = ( props: IPropsIsland ) => {
    /*  console.log(props, setHose) */
     return (
         <div className='container-fluid p-0 mb-4'>
-            <Header title='Isla'/>
+            <Header/>
             <Stepper current={3}/>
             <div className='container'>
                 {/* <Formik

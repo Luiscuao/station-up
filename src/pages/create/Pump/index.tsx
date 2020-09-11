@@ -4,30 +4,32 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 
 //Types
 import {
-  islands,
   factors,
   statePump,
-  protocolConcentrator,
-} from "../../constant/options";
+  serialport
+} from "../../../constant/options";
 import { formSchema ,IPropsPump } from "./interface";
-import {ITile} from '../../components/ListTile/interface';
+import {ITile} from '../../../components/ListTile/interface';
 
 //Services
-/* import {createPump} from '../../api/services/pumpService'; */
-
+import {getPumpByStation,createPump,deletePump} from '../../../api/services/pumpService';
+import {getIslandByStation} from '../../../api/services/islandService';
 //Component
-import Header from "../../components/Header";
-import Stepper from "../../components/Stepper";
-import SelectSearch from "../../components/SelectSearch";
-import ListTile from 'src/components/ListTile';
+import Header from "../../../components/Header";
+import Stepper from "../../../components/Stepper";
+import SelectSearch from "../../../components/SelectSearch";
+import ListTile from '../../../components/ListTile';
+
+//utils
+import {showAlertError,showAlertSuccess} from '../../../utils/toast';
 
 const Pump = (props:IPropsPump) => {
   const [pumps, setPumps] = useState<ITile[]>([]);
   const [refresh, setRefresh] = useState(0);
+  const [islands, setIslands] = useState([]);
   const initialValues = {
-    module: "",
+    core: "",
     serialport: "",
-    protocolConcentrator: "",
     state: "",
     partialvolumefactor: "",
     partialimportfactor: "",
@@ -39,15 +41,27 @@ const Pump = (props:IPropsPump) => {
   useEffect(()=>{
 
     (async ()=>{
-      setPumps([{title:'Surtidor 1'},{title:'Surtidor 2'},{title:'Surtidor 3'},{title:'Surtidor 4'} ])
-        console.log('refresh render')
+      const id = localStorage.getItem('idStation')||'';
+      const responsePump = await getPumpByStation(id);
+      const responseIsland = await getIslandByStation(id); 
+      const pump = responsePump.map(pump => {
+        const name = 'Surtidor '+pump.name;
+       return ({
+          title:name,
+          id:pump._id,
+          subtitle:pump.island
+        })
+      });
+      const island = responseIsland.map(island => ({value:island._id,label:island.name}));
+
+      setPumps(pump)
+      setIslands(island);
     })();
   },[refresh])
 
-  const submitPump = (values) => {
+  const submitPump = (values,{resetForm}) => {
     const {
-      module,
-      protocolConcentrator,
+      core,
       serialport,
       state,
       partialvolumefactor,
@@ -56,13 +70,14 @@ const Pump = (props:IPropsPump) => {
       inventaryfactor,
       island,
     } = values;
+    const station = localStorage.getItem('idStation');
     const newPump = {
+      station,
       island,
-      module,
-      state,
+      core,
+      state:Number(state),
       concentrator: {
         serialport,
-        protocolConcentrator,
       },
       factors: {
         partialvolumefactor,
@@ -71,17 +86,31 @@ const Pump = (props:IPropsPump) => {
         inventaryfactor,
       },
     };
-    /* createPump(newPump);  */
-    console.log(newPump);
-    setRefresh((refresh) =>refresh+1);
+    createPump(newPump)
+    .then(() => {
+      resetForm(initialValues)
+      setRefresh((refresh) =>refresh+1);
+      showAlertSuccess('Creado Exitosamente');
+    })
+    .catch(() =>{
+      showAlertError('El surtidor no pudo ser creado')
+    }); 
+    
   };
-  const onDelete = () => {
-    setRefresh((refresh) =>refresh-1);
+  const onDelete = (id:string) => {
+    deletePump(id)
+    .then(()=>{
+      setRefresh((refresh) =>refresh-1);
+      showAlertSuccess('eliminado Exitosamente');
+    })
+    .catch(()=>{
+      showAlertError('El surtidor no pudo ser eliminado')
+    })
 }
   return (
     <div className="container-fluid p-0 mb-4">
-      <Header title="Isla" />
-      <Stepper current={3} />
+      <Header />
+      <Stepper current={4} />
       <Formik
         initialValues={initialValues}
         onSubmit={submitPump}
@@ -105,16 +134,16 @@ const Pump = (props:IPropsPump) => {
               />
             </div>
             <div className="form-group col-md-6">
-              <label htmlFor="input-module">Modulo</label>
+              <label htmlFor="input-core">Modulo</label>
               <Field
                 type="text"
-                placeholder="nombre"
-                name="module"
+                placeholder="Ip"
+                name="core"
                 className="form-control"
-                id="input-module"
+                id="input-core"
               />
               <ErrorMessage
-                name="module"
+                name="core"
                 component="small"
                 className="field-error text-danger"
               />
@@ -122,9 +151,9 @@ const Pump = (props:IPropsPump) => {
           </div>
           <div className="row">
             <div className="col-md-6">
-              <label>Concentrador</label>
+              <label>Host</label>
               <div className="d-flex">
-                <div className="form-group flex-grow-1 mr-2">
+                {/* <div className="form-group flex-grow-1 mr-2">
                   <Field
                     name="protocolConcentrator"
                     options={protocolConcentrator}
@@ -137,13 +166,14 @@ const Pump = (props:IPropsPump) => {
                     component="small"
                     className="field-error text-danger"
                   />
-                </div>
+                </div> */}
                 <div className="form-group flex-grow-1">
                   <Field
-                    type="text"
-                    placeholder="Puerto serial"
                     name="serialport"
-                    className="form-control"
+                    options={serialport}
+                    component={SelectSearch}
+                    placeholder="Seleccione..."
+                    isMulti={false}
                   />
                   <ErrorMessage
                     name="serialport"
@@ -234,13 +264,13 @@ const Pump = (props:IPropsPump) => {
           </div>
           <div className="row">
             <div className="col-12 d-flex justify-content-between mt-4">
-              <button onClick={()=>props.history.push('/island')} type="button" className="btn btn-primary">
+              <button onClick={()=>props.history.push('/create/island')} type="button" className="btn btn-primary">
                 Anterior
               </button>
               <button type="submit" className="btn btn-primary">
                 Crear
               </button>
-              <button  onClick={()=>props.history.push('/hose')} type="button" className="btn btn-primary">
+              <button  onClick={()=>props.history.push('/create/hose')} type="button" className="btn btn-primary">
                 Siguiente
               </button>
             </div>
@@ -250,7 +280,7 @@ const Pump = (props:IPropsPump) => {
                 <ListTile list={pumps}  onDelete={onDelete}/>
                 :
                 <div className="col-12">
-                    <p className="text-muted text-center mb-4 mt-4 ">No hay Tanques disponibles</p>
+                    <p className="text-muted text-center mb-4 mt-4 ">No hay Surtidores disponibles</p>
                 </div>
             }
                         

@@ -1,4 +1,6 @@
 export interface ITile{
     title: string;
-    onDelete:() => void;
+    subtitle?: string;
+    id?:string;
+    onDelete:(id:string) => void;
 }

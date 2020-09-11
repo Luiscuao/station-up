@@ -11,3 +11,25 @@ export const createPump = async (data: any)=>{
         }
     );
 }
+
+export const getPumpByStation = async (id:string)=>{
+    const url = '/station/pump/all/'+id
+    const response = await axios(
+        {
+            method: "get",
+            url: url,
+        }
+    );
+    return response.data;
+}
+
+export const deletePump = async (id:string)=>{
+    const url = '/station/pump/'+id
+    const response = await axios(
+        {
+            method: "delete",
+            url: url,
+        }
+    );
+    return response.data;
+}

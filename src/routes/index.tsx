@@ -1,23 +1,31 @@
 import React from 'react'
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Home from '../pages/Home';
-import Station from '../pages/Station';
-import Tank from '../pages/Tank';
-import Island from 'src/pages/Island';
-import Pump from '../pages/Pump';
-import Hose from '../pages/Hose';
+import CreateHome from '../pages/Home';
+import Create from '../pages/create'
+import Edit from '../pages/edit'
+import CreateStation from '../pages/create/Station';
+import CreateDevice from '../pages/create/Device';
+import CreateTank from '../pages/create/Tank';
+import CreateIsland from '../pages/create/Island';
+import CreatePump from '../pages/create/Pump';
+import CreateHose from '../pages/create/Hose';
+import EditDevice from '../pages/edit/Device';
 import "react-toastify/dist/ReactToastify.css";
 const Routes = () => {
     return (
         <BrowserRouter>
         <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/station" component={Station} />
-            <Route exact path="/tank" component={Tank} />
-            <Route exact path="/island" component={Island} />
-            <Route exact path="/pump" component={Pump} />
-            <Route exact path="/hose" component={Hose} />
+            <Route exact path="/" component={CreateHome} />
+            <Route exact path="/create" component={Create} />
+            <Route exact path="/edit" component={Edit} />
+            <Route exact path="/create/station" component={CreateStation} />
+            <Route exact path="/create/device" component={CreateDevice} />
+            <Route exact path="/create/tank" component={CreateTank} />
+            <Route exact path="/create/island" component={CreateIsland} />
+            <Route exact path="/create/pump" component={CreatePump} />
+            <Route exact path="/create/hose" component={CreateHose} />
+            <Route exact path="/edit/device" component={EditDevice} />
         </Switch>
         <ToastContainer/>
     </BrowserRouter>

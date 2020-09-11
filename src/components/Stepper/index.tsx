@@ -7,32 +7,39 @@ const StepperCostum = (props:IPropsStepper) => {
         title: 'Estacion',
         onClick: (e:MouseEvent) => {
           e.preventDefault()
-          props.history.push('/station')
+          props.history.push('/create/station')
         }
-      }, {
+      },{
+        title: 'Dispositivos',
+        onClick: (e:MouseEvent) => {
+          e.preventDefault()
+          props.history.push('/create/device')
+        }
+      }
+      , {
         title: 'Tanques',
         onClick: (e:MouseEvent) => {
           e.preventDefault()
-          props.history.push('/tank')
+          props.history.push('/create/tank')
         }
       }, {
         title: 'Isla',
         onClick: (e:MouseEvent) => {
           e.preventDefault()
-          props.history.push('/island')
+          props.history.push('/create/island')
         }
       }, {
         title: 'Surtidores',
         onClick: (e:MouseEvent) => {
           e.preventDefault()
-          props.history.push('/pump')
+          props.history.push('/create/pump')
         }
       },
       {
         title: 'Mangueras',
         onClick: (e:MouseEvent) => {
           e.preventDefault()
-          props.history.push('/hose')
+          props.history.push('/create/hose')
         }
       }
     ]

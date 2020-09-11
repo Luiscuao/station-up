@@ -1,49 +1,27 @@
-import React , {useState}from 'react';
-import {withRouter} from 'react-router'
-import setAuthToken from '../../api/setAuthToken'
+import React from 'react'
 import {IPropsHome} from './interface'
-import {validateKey} from '../../api/services/keysService'
-import './styles.css';
-const Home = (props:IPropsHome) => {
-    const [apiKey, setApiKey] = useState("");
-    const onChange = (event:any)=>{
-        const {value}= event.target;
-        setApiKey(value);
-    }
-    const submit = async ()=>{
-        try {
-            setAuthToken(apiKey)
-            await validateKey();
-            localStorage.setItem('api-key', apiKey);
-            props.history.push('/station');
-        } catch (error) {
-            setAuthToken('')
-            localStorage.setItem('api-key', '');
-            console.log(error);
-        }
-        
-    }
+const Home = (props: IPropsHome) => {
     return (
-        <div className="container">
-            <div className="key-form__container">  
-                <div className="row">
-                    <div className="col-12">
-                        <div className="form-group">
-                                <label htmlFor="input_api-key">API-KEY</label>
-                                <input type="text" 
-                                    value={apiKey}
-                                    placeholder="api-key" 
-                                    onChange={onChange} 
-                                    name='api-key' 
-                                    className="form-control" 
-                                    id="input_api-key"/>
-                        </div>
-                        <button type="submit" className="btn btn-primary" onClick={submit}>Enviar</button>
-                        </div>
-                    </div>
-                </div>
+        <div className="bg-primary vh-100 d-flex flex-column justify-content-center align-items-center">
+            <div className="mb-4">
+                <img src='https://eazyfuels.s3.amazonaws.com/Assets/logo.png' alt="" />
+            </div>
+            <div className="d-flex justify-content-around mt-4" style={{"width": "35vw"}}>
+            <button 
+                className="btn btn-warning text-primary font-weight-bold w-25" 
+                style={{"maxWidth": "120px"}} 
+                onClick={()=>{props.history.push('/create')}} 
+            >Crear   
+            </button>
+            <button 
+                className="btn btn-warning text-primary font-weight-bold w-25" 
+                style={{"maxWidth": "120px"}}
+                onClick={()=>{props.history.push('/edit')}}
+            >Editar
+            </button>
+            </div>
         </div>
     )
 }
 
-export default withRouter(Home);
+export default Home

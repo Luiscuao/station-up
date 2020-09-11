@@ -3,25 +3,27 @@ import React , {useState,useEffect} from 'react';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 
 //Types
-import {types_tank} from '../../constant/options';
+import {types_tank} from '../../../constant/options';
 import {IPropsTank,formSchema} from './interface';
-import {ITile} from '../../components/ListTile/interface';
+import {ITile} from '../../../components/ListTile/interface';
 
 //Components
-import Header from '../../components/Header';
-import SelectSearch from '../../components/SelectSearch';
-import Stepper from '../../components/Stepper';
-import ListTile from 'src/components/ListTile';
+import Header from '../../../components/Header';
+import SelectSearch from '../../../components/SelectSearch';
+import Stepper from '../../../components/Stepper';
+import ListTile from '../../../components/ListTile';
+
 //utils
-/* 
-import {showAlertError} from '../../utils/toast';
-*/
-import {unitsToMeters} from '../../utils/units-convertert';
+
+import {showAlertError,showAlertSuccess} from '../../../utils/toast';
+
+import {unitsToMeters} from '../../../utils/units-convertert';
 //Services
-/* import {createTank} from '../../api/services/tankService'; 
- */
+import {getTankByStation,deleteTankByStation,createTank} from '../../../api/services/tankService'; 
+
 
 const Tank = (props:IPropsTank) => {
+    console.log(props)
     const [tanks, setTanks] = useState<ITile[]>([]);
     const [refresh, setRefresh] = useState(0);
     const initialValues = {
@@ -40,57 +42,110 @@ const Tank = (props:IPropsTank) => {
     useEffect(()=>{
 
         (async ()=>{
-            setTanks([{title:'APM'},{title:'Corriente'},{title:'APM'},{title:'EXTRA'} ])
-            console.log('refresh render')
+            const id = localStorage.getItem('idStation')||'';
+            const response = await getTankByStation(id);
+            const ids =response.map((tank)=>{
+                switch (tank.family) {
+                    case 1:
+                      return `EZ_FUEL_CRR_ID=${tank._id}`
+                    case 3:
+                      return `EZ_FUEL_EXTRA_ID=${tank._id}`;
+                    case 5:
+                      return  `EZ_FUEL_ACPM_ID=${tank._id}`;
+                    default:
+                      return "";
+                  }
+            })
+            console.log(ids)
+            const tanks = response.map(t => ({title:t.name,id:t._id}))
+            setTanks(tanks);
         })();
     },[refresh])
-    
-    const submit = (values)=>{
+    const getNameTank = (idTank:number)=>{
+        switch (idTank) {
+          case 1:
+            return "CORRIENTE";
+          case 3:
+            return "EXTRA";
+          case 5:
+            return "ACPM";
+          default:
+            return "";
+        }
+    }
+    const submit = (values,{resetForm})=>{
         const stationId = localStorage.getItem('idStation'); 
-        const {type,price,min,max,actualvalue ,units_dimension,units_max_heigth} = values;
+        const {price,min,max,actualvalue ,units_dimension,units_max_heigth,type} = values;
+        const name = getNameTank(type);
         let {width,heigth,maxHeight} = values;
         heigth = unitsToMeters(heigth,units_dimension);
         width = unitsToMeters(width,units_dimension);
         maxHeight = unitsToMeters(maxHeight,units_max_heigth);
         const newTank = {
+            name,
             price,
+            family:type,
             station:stationId,
             actualvalue,
             capacity:{
                 min, 
                 max
             },
-            type,
             dimension:{
                 heigth,
                 width
             },
             maxHeight,
         }
-        setRefresh((refresh) =>refresh+1);
-        console.log(newTank, "tank")
+        
+         createTank(newTank).then(()=>{
+            setRefresh((refresh) =>refresh+1);
+            resetForm(initialValues);
+            showAlertSuccess('Creado Exitosamente');
+        })
+        .catch(()=>{
+            showAlertError('Error en la creacion de Tanques');
+        });
+        
         
     }
 
-    const onDelete = () => {
-        setRefresh((refresh) =>refresh-1);
+    const onDelete =  (id:string) => {
+        deleteTankByStation(id).then(()=>{
+            setRefresh((refresh) =>refresh-1);
+            showAlertSuccess('Eliminado Exitosamente');
+        }).catch(() =>{
+            showAlertError('Error en la eliminacion de Tanques');
+        });
+        
+    }
+    const previus = ()=>{
+        props.history.push('/create/device')
+    }
+    const next = ()=>{
+        props.history.push('/create/island')
     }
 
     return (
         <div className='container-fluid p-0'>
-            <Header title='Tanque'/>
-            <Stepper current={1}/>
+            <Header />
+            <Stepper current={2}/>
             <Formik
                 initialValues={initialValues}
                 onSubmit={submit}
                 validationSchema={formSchema}
+                validateOnChange={false}
+                validateOnBlur={false}
             >
-                <Form className='container'>
+                { 
+                    (props)=>{
+                        return (
+                            <Form className='container'>
                     <h1 className='mb-4 mt-4'>Tanques</h1>
                     <div className='row'>
                             <div className="form-group col-md-6">
                                 <label htmlFor="input_type-tank">Tipo de tanque</label>
-                                <Field
+                                <Field  type="number" 
                                         name="type"
                                         options={types_tank}
                                         component={SelectSearch}
@@ -98,9 +153,9 @@ const Tank = (props:IPropsTank) => {
                                         isMulti={false}
                                 />
                                 <ErrorMessage
-                                        name='type'
-                                        component='small'
-                                        className='field-error text-danger'
+                                    name='type'
+                                    component='small'
+                                    className='field-error text-danger'
                                 />
                             </div>
                             <div className="form-group col-md-6">
@@ -111,6 +166,16 @@ const Tank = (props:IPropsTank) => {
                                             name='actualvalue' 
                                             className="form-control" 
                                             id="input_current-gal"
+                                            validate={(value) => {
+                                                let error;
+                                                if(value<props.values.min && props.values.min.length!==0)
+                                                    error = `El galon actual es menor a la capacidad minima`
+
+                                                if(value>props.values.max && props.values.max.length!==0)
+                                                    error = `El galon actual es mayor a la capacidad maxima`
+
+                                                return error;
+                                            }}
                                             />
                                         <div className="input-group-append">
                                             <span className="input-group-text">gal</span>
@@ -155,7 +220,7 @@ const Tank = (props:IPropsTank) => {
                                     </div>
                                     <div className="form-group flex-grow-1">
                                     <Field as="select" name="units_dimension" className="form-control">
-                                        <option value="">Selecciona...</option>
+                                        <option value="">Seleccione...</option>
                                         <option value="cm">CM</option>
                                         <option value="ft">FT</option>
                                         <option value="m">M</option>
@@ -179,6 +244,12 @@ const Tank = (props:IPropsTank) => {
                                                 name='min' 
                                                 className="form-control" 
                                                 id="input_min-capacity"
+                                                validate={(value) => {
+                                                    let error;
+                                                    if(value>props.values.max && props.values.max.length!==0)
+                                                        error = `El valor minimo  es incorreto`
+                                                    return error;
+                                                }}
                                             />
                                             <div className="input-group-append">
                                                 <span className="input-group-text">gal</span>
@@ -198,6 +269,12 @@ const Tank = (props:IPropsTank) => {
                                                 name='max' 
                                                 className="form-control" 
                                                 id="input_max-capacity"
+                                                validate={(value) => {
+                                                    let error;
+                                                    if(props.values.min>value && props.values.min.length!==0)
+                                                        error = `El valor maximo  es incorreto`
+                                                    return error;
+                                                }}
                                             />
                                             <div className="input-group-append">
                                                 <span className="input-group-text">gal</span>
@@ -238,6 +315,12 @@ const Tank = (props:IPropsTank) => {
                                        name='maxHeight' 
                                        className="form-control" 
                                        id="input-max-heigth"
+                                       validate={(value) => {
+                                        let error;
+                                        if(value>props.values.heigth && props.values.heigth.length!==0)
+                                            error = `La altura maxima es incorreta`
+                                        return error;
+                                    }}
                                     />
                                     <ErrorMessage
                                         name='maxHeight'
@@ -247,7 +330,7 @@ const Tank = (props:IPropsTank) => {
                                 </div>
                                 <div className="form-group flex-grow-1">
                                     <Field as="select" name="units_max_heigth" className="form-control">
-                                        <option value="">Selecciona...</option>
+                                        <option value="">Seleccione...</option>
                                         <option value="cm">CM</option>
                                         <option value="ft">FT</option>
                                         <option value="m">M</option>
@@ -262,9 +345,9 @@ const Tank = (props:IPropsTank) => {
                         </div>    
                     </div>
                     <div className="col-12 d-flex justify-content-between mt-4 mb-4">
-                        <button className="btn btn-primary" type="button" onClick={()=>props.history.push('/station')}>Anterior</button>
+                        <button className="btn btn-primary" type="button" onClick={previus}>Anterior</button>
                         <button className="btn btn-primary" type="submit">Crear</button>
-                        <button className="btn btn-primary" type="button" onClick={()=>props.history.push('/island')}>Siguiente</button>
+                        <button className="btn btn-primary" type="button" onClick={next}>Siguiente</button>
                     </div>
 
                     <div className="row mb-4 mt-4">
@@ -275,10 +358,15 @@ const Tank = (props:IPropsTank) => {
                                 <p className="text-muted text-center mb-4 mt-4 ">No hay Tanques disponibles</p>
                             </div>
                         }
-                        
+                         
                     </div>
 
+                   
+
                 </Form>
+                        )
+                    }
+                }
             </Formik>
         </div>                
             

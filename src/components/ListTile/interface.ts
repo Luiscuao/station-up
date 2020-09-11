@@ -1,9 +1,11 @@
 
 export interface ITile{
     title: string;
+    subtitle?: string;
+    id?: string;
 }
 
 export interface IpropsListTile{
     list : ITile []
-    onDelete: () => void;
+    onDelete: (id:string) => void;
 }

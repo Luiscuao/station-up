@@ -4,13 +4,11 @@ import * as Yup from "yup";
 export interface IPropsPump extends RouteComponentProps<any> {}
 
 export const formSchema = Yup.object().shape({
-    module: Yup.string()
+    core: Yup.string()
       .required("Campo Requerido"),
     serialport: Yup.string()
       .required("Campo Requerido"),
-    protocolConcentrator: Yup.string()
-      .required("Campo Requerido"),
-    state: Yup.string()
+    state: Yup.number()
       .required("Campo Requerido"),
     partialvolumefactor: Yup.string()
       .required("Campo Requerido"),

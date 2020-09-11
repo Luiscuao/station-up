@@ -4,13 +4,14 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import {ITile} from './interface';
 const Tile = (props:ITile) => {
-    const { title,onDelete} = props;
+    const { title,id="",subtitle,onDelete} = props;
     return (
         <li className="list-group-item d-flex justify-content-between align-items-center mb-2">
           <div className="m-0">
-            <h6 className="m-0">{title}</h6>
+            <h5 className="m-0">{title}</h5>
+            <p className="m-0">{subtitle}</p>
           </div>
-          <button type="button"  onClick={onDelete}  className="btn btn-danger btn-sm">
+          <button type="button"  onClick={()=>onDelete(id)}  className="btn btn-danger btn-sm">
             <FontAwesomeIcon icon={faTrashAlt} />
           </button>
         </li>
