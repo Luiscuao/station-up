@@ -6,8 +6,6 @@ export interface IPropsPump extends RouteComponentProps<any> {}
 export const formSchema = Yup.object().shape({
     core: Yup.string()
       .required("Campo Requerido"),
-    serialport: Yup.string()
-      .required("Campo Requerido"),
     state: Yup.number()
       .required("Campo Requerido"),
     partialvolumefactor: Yup.string()

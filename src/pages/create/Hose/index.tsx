@@ -12,6 +12,7 @@ import { ITile } from "../../../components/ListTile/interface";
 import {getPumpByStation} from '../../../api/services/pumpService';
 import {getTankByStation} from '../../../api/services/tankService';
 import {getHoseByStation,createHose,deleteHose} from '../../../api/services/hoseService';
+import {finishConfigurationService} from '../../../api/services/finishConfigurationService'
 
 //Components
 import SelectSearch from "../../../components/SelectSearch";
@@ -94,12 +95,12 @@ const Hose = (props: IPropsHose) => {
       const responseTank = await getTankByStation(id);
       const responseHose = await getHoseByStation(id);
       const pump = responsePump.map(pump => ({label:'Surtidor '+pump.name,value:pump._id}));
-      const tank = responseTank.map(tank => ({label:tank.name,value:tank._id}));
+      const tank = responseTank.map(tank => ({label:tank.name,value:tank._id , family:tank.family}));
       const hose = responseHose.map(hose => {
         const pump = 'Surtidor '+hose.pump;
         const degree = 'Grado '+hose.grade;
         
-        return ({title:'Manguera '+hose.name,subtitle:`${pump} | ${degree}`, id:hose._id})
+        return ({title:'Manguera '+hose.name,subtitle:`${pump} | ${degree} | `, id:hose._id})
       })
       setTank(tank);
       setHose(hose);
@@ -119,11 +120,13 @@ const Hose = (props: IPropsHose) => {
   },[currentPump])
 
   const finished = () => {
-    /* localStorage.setItem("api-key", "");
+    finishConfigurationService();
+   /* 
+    localStorage.setItem("api-key", "");
     localStorage.setItem("idStation", "");
     setAuthToken("");
-    props.history.push("/");
-     */
+    props.history.push("/"); */
+    
     toggleFinish();
     togglePrintData();
   };
@@ -132,20 +135,21 @@ const Hose = (props: IPropsHose) => {
   const getTanksAndStation = () => {
             const id = localStorage.getItem('idStation')||'';
             const station = `EZ_STATION_ID=${id}`
-            /*
-            const tanks =tank.map((tank)=>{
+            
+            const tanks =tank.map((tank:any)=>{
                 switch (tank.family) {
                     case 1:
-                      return `EZ_FUEL_CRR_ID=${tank._id}`
+                      return `EZ_FUEL_CRR_ID=${tank.value}`
                     case 3:
-                      return `EZ_FUEL_EXTRA_ID=${tank._id}`;
+                      return `EZ_FUEL_EXTRA_ID=${tank.value}`;
                     case 5:
-                      return  `EZ_FUEL_ACPM_ID=${tank._id}`;
+                      return  `EZ_FUEL_ACPM_ID=${tank.value}`;
                     default:
                       return "";
                   }
-            }) */
-            return [station,"EZ_FUEL_CRR_ID=6464564654dfgdf654","EZ_FUEL_EXTRA_ID=6464564654dfgdf654","EZ_FUEL_ACPM_ID=6464564654dfgdf654"]
+            }) 
+            console.log([station,...tanks]);
+            return [station,...tanks]
   }
   return (
     <div className="container-fluid p-0 mb-4">
@@ -194,6 +198,7 @@ const Hose = (props: IPropsHose) => {
                       onChange={(event) => {
                         setCurrentPump(event.target.value);
                         props.setFieldValue("pump", event.target.value);
+                        props.setFieldValue("face", '');
                       }}
                     >
                       <option value="">Seleccione...</option>

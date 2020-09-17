@@ -6,7 +6,6 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import {
   factors,
   statePump,
-  serialport
 } from "../../../constant/options";
 import { formSchema ,IPropsPump } from "./interface";
 import {ITile} from '../../../components/ListTile/interface';
@@ -29,7 +28,6 @@ const Pump = (props:IPropsPump) => {
   const [islands, setIslands] = useState([]);
   const initialValues = {
     core: "",
-    serialport: "",
     state: "",
     partialvolumefactor: "",
     partialimportfactor: "",
@@ -45,11 +43,11 @@ const Pump = (props:IPropsPump) => {
       const responsePump = await getPumpByStation(id);
       const responseIsland = await getIslandByStation(id); 
       const pump = responsePump.map(pump => {
-        const name = 'Surtidor '+pump.name;
+      const name = 'Surtidor '+pump.name;
        return ({
           title:name,
           id:pump._id,
-          subtitle:pump.island
+          subtitle:`${pump.island} | ${pump.core}`
         })
       });
       const island = responseIsland.map(island => ({value:island._id,label:island.name}));
@@ -62,7 +60,6 @@ const Pump = (props:IPropsPump) => {
   const submitPump = (values,{resetForm}) => {
     const {
       core,
-      serialport,
       state,
       partialvolumefactor,
       partialimportfactor,
@@ -76,9 +73,6 @@ const Pump = (props:IPropsPump) => {
       island,
       core,
       state:Number(state),
-      concentrator: {
-        serialport,
-      },
       factors: {
         partialvolumefactor,
         partialimportfactor,
@@ -150,39 +144,6 @@ const Pump = (props:IPropsPump) => {
             </div>
           </div>
           <div className="row">
-            <div className="col-md-6">
-              <label>Host</label>
-              <div className="d-flex">
-                {/* <div className="form-group flex-grow-1 mr-2">
-                  <Field
-                    name="protocolConcentrator"
-                    options={protocolConcentrator}
-                    component={SelectSearch}
-                    placeholder="Protocolo"
-                    isMulti={false}
-                  />
-                  <ErrorMessage
-                    name="protocolConcentrator"
-                    component="small"
-                    className="field-error text-danger"
-                  />
-                </div> */}
-                <div className="form-group flex-grow-1">
-                  <Field
-                    name="serialport"
-                    options={serialport}
-                    component={SelectSearch}
-                    placeholder="Seleccione..."
-                    isMulti={false}
-                  />
-                  <ErrorMessage
-                    name="serialport"
-                    component="small"
-                    className="field-error text-danger"
-                  />
-                </div>
-              </div>
-            </div>
             <div className="form-group col-md-6">
               <label>Estado</label>
               <Field

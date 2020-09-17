@@ -76,7 +76,7 @@ const CreateIsland = (props: IPropsCreateIsland) => {
                         <div className="form-group mt-5">
                             <label htmlFor="input_name-island">Nombre</label>
                             <Field 
-                                type="text"
+                                type="number"
                                 placeholder="Nombre de la isla." 
                                 name='name' 
                                 className="form-control" 
