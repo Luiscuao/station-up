@@ -99,7 +99,7 @@ const Hose = (props: IPropsHose) => {
       const hose = responseHose.map(hose => {
         const pump = 'Surtidor '+hose.pump;
         const degree = 'Grado '+hose.grade;
-        
+        console.log(hose)
         return ({title:'Manguera '+hose.name,subtitle:`${pump} | ${degree} | `, id:hose._id})
       })
       setTank(tank);

@@ -6,7 +6,7 @@ import './styles/bootstrap.css';
 import setAuthToken from './api/setAuthToken';
 import axios from 'axios';
 
-axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+axios.defaults.baseURL =localStorage.getItem("ip")|| "https://";
 
 const apiKey = localStorage.getItem("api-key");
 if(apiKey){
