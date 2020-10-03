@@ -1,6 +1,6 @@
 import React from 'react'
 import { ToastContainer } from "react-toastify";
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Switch, Route } from 'react-router-dom';
 import CreateHome from '../pages/Home';
 import Create from '../pages/create'
 import Edit from '../pages/edit'
@@ -14,7 +14,7 @@ import EditDevice from '../pages/edit/Device';
 import "react-toastify/dist/ReactToastify.css";
 const Routes = () => {
     return (
-        <BrowserRouter>
+        <HashRouter>
         <Switch>
             <Route exact path="/" component={CreateHome} />
             <Route exact path="/create" component={Create} />
@@ -28,7 +28,7 @@ const Routes = () => {
             <Route exact path="/edit/device" component={EditDevice} />
         </Switch>
         <ToastContainer/>
-    </BrowserRouter>
+    </HashRouter>
     )
 }
 
