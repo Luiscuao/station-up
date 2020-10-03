@@ -47,10 +47,10 @@ const Pump = (props:IPropsPump) => {
        return ({
           title:name,
           id:pump._id,
-          subtitle:`${pump.island} | ${pump.core}`
+          subtitle:`Isla ${pump.island} | ${pump.core}`
         })
       });
-      const island = responseIsland.map(island => ({value:island._id,label:island.name}));
+      const island = responseIsland.map(island => ({value:island._id,label:'Isla '+island.name}));
 
       setPumps(pump)
       setIslands(island);

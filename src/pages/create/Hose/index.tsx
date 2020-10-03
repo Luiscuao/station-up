@@ -12,7 +12,7 @@ import { ITile } from "../../../components/ListTile/interface";
 import {getPumpByStation} from '../../../api/services/pumpService';
 import {getTankByStation} from '../../../api/services/tankService';
 import {getHoseByStation,createHose,deleteHose} from '../../../api/services/hoseService';
-import {finishConfigurationService} from '../../../api/services/finishConfigurationService'
+/* import {finishConfigurationService} from '../../../api/services/finishConfigurationService' */
 
 //Components
 import SelectSearch from "../../../components/SelectSearch";
@@ -23,6 +23,10 @@ import Modal from '../../../components/Modal';
 
 //utils
 import {showAlertError,showAlertSuccess} from '../../../utils/toast';
+
+//Assets
+import iconColor from '../../../assets/icon/gas-station-color.png'
+import iconBalck from '../../../assets/icon/gas-black.png'
 
 const Hose = (props: IPropsHose) => {
   const [hose, setHose] = useState<ITile[]>([]);
@@ -99,8 +103,10 @@ const Hose = (props: IPropsHose) => {
       const hose = responseHose.map(hose => {
         const pump = 'Surtidor '+hose.pump;
         const degree = 'Grado '+hose.grade;
+        const face = 'Cara '+hose.face;
+        const fuel = 'Tipo '+hose.fuel
         console.log(hose)
-        return ({title:'Manguera '+hose.name,subtitle:`${pump} | ${degree} | `, id:hose._id})
+        return ({title:'Manguera '+hose.name,subtitle:`${pump} | ${degree} | ${face} | ${fuel}  `, id:hose._id})
       })
       setTank(tank);
       setHose(hose);
@@ -120,7 +126,7 @@ const Hose = (props: IPropsHose) => {
   },[currentPump])
 
   const finished = () => {
-    finishConfigurationService();
+    /* finishConfigurationService(); */
    /* 
     localStorage.setItem("api-key", "");
     localStorage.setItem("idStation", "");
@@ -237,18 +243,18 @@ const Hose = (props: IPropsHose) => {
                           <label className="m-0">
                           <Field type="radio" name="degree" value="0" className="d-none"/>
                           {props.values.degree==="0"?
-                            <img className='image-icon' src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775291/gas-station_2_nimm42.png" alt=""/>
+                            <img className='image-icon' src={iconColor} alt=""/>
                             :
-                            <img className='image-icon' src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775281/gas_vibtuz.png" alt=""/>
+                            <img className='image-icon' src={iconBalck} alt=""/>
                           
                           }
                         </label>
                         <label className="m-0">
                           <Field type="radio" name="degree" value="1" className="d-none"/>
                           {props.values.degree==="1"?
-                            <img className='image-icon' src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775291/gas-station_2_nimm42.png" alt=""/>
+                            <img className='image-icon' src={iconColor} alt=""/>
                             :
-                            <img className='image-icon' src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775281/gas_vibtuz.png" alt=""/>
+                            <img className='image-icon' src={iconBalck} alt=""/>
                           
                           }
                           
@@ -256,9 +262,9 @@ const Hose = (props: IPropsHose) => {
                         <label className="m-0">
                           <Field type="radio" name="degree" value="2" className="d-none"/>
                           {props.values.degree==="2"?
-                            <img className='image-icon' src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775291/gas-station_2_nimm42.png" alt=""/>
+                            <img className='image-icon' src={iconColor} alt=""/>
                             :
-                            <img className='image-icon' src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775281/gas_vibtuz.png" alt=""/>
+                            <img className='image-icon' src={iconBalck} alt=""/>
                           
                           }
                         </label>

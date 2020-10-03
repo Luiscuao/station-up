@@ -30,7 +30,7 @@ const CreateIsland = (props: IPropsCreateIsland) => {
         (async ()=>{
             const id = localStorage.getItem('idStation')||'';
             const response = await getIslandByStation(id);
-            const island = response.map(island => ({title:island.name,id:island._id}))
+            const island = response.map(island => ({title:`Isla ${island.name}`,id:island._id}))
             setIsland(island)
         })();
     },[refresh]);
