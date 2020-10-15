@@ -2,6 +2,8 @@ import React from 'react';
 import {withRouter} from 'react-router';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import axios from 'axios';
+
+
 import setAuthToken from '../../api/setAuthToken'
 import {IPropsCreate,formSchema} from './interface'
 import {validateKey} from '../../api/services/keysService'
@@ -35,11 +37,20 @@ const Create = (props:IPropsCreate) => {
                 showAlertError('API-KEY expirada')
                 setAuthToken('')
                 localStorage.setItem('api-key', '');
+            }else{
+                showAlertError('Error de servidor')
+                setAuthToken('')
+                localStorage.setItem('api-key', '');
             }
            
         }
         
     }
+    function onKeyDown(keyEvent) {
+        if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+          keyEvent.preventDefault();
+        }
+      }
     return (
         <div className="container-fluid p-0">
             <Header/>
@@ -47,7 +58,7 @@ const Create = (props:IPropsCreate) => {
             validationSchema={formSchema}
             initialValues={initialValues}
             onSubmit={submit}>
-                <Form className="container key-form__container">
+                <Form onKeyDown={onKeyDown} className="container key-form__container">
                 <h3 className="text-center mb-4">Configuracion de estaciones</h3>
                 <div className="row">
                     <div className="col-6">

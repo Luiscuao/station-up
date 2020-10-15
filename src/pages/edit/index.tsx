@@ -44,6 +44,11 @@ const Edit = (props:IPropsEdit) => {
         });
          
     }
+    function onKeyDown(keyEvent) {
+      if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+        keyEvent.preventDefault();
+      }
+    }
     return (
       <div className="container-fluid p-0">
         <Header  />
@@ -52,7 +57,7 @@ const Edit = (props:IPropsEdit) => {
           initialValues={initialValues}
           onSubmit={submit}
         >
-          <Form className="container key-form__container">
+          <Form onKeyDown={onKeyDown} className="container key-form__container">
             <h3 className="text-center mb-4">Modificacion de estaciones</h3>
             <div className="row">
               <div className="col-6">

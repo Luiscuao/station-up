@@ -54,6 +54,11 @@ const Station = (props:IPropsStation) => {
         localStorage.setItem("api-key", "");
         setAuthToken("");
     }
+    function onKeyDown(keyEvent) {
+        if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+          keyEvent.preventDefault();
+        }
+      }
     
     return (
             <div className='container-fluid p-0'>
@@ -67,7 +72,7 @@ const Station = (props:IPropsStation) => {
                     initialValues={initialValues}
                     onSubmit={submit}
                 > 
-                    <Form className='container'>
+                    <Form onKeyDown={onKeyDown} className='container'>
                         <div className='row'>
                             <div className="form-group col-md-6">
                                     <label htmlFor="input-station-name">Nombre</label>

@@ -125,6 +125,11 @@ const Tank = (props:IPropsTank) => {
     const next = ()=>{
         props.history.push('/create/island')
     }
+    function onKeyDown(keyEvent) {
+        if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+          keyEvent.preventDefault();
+        }
+      }
 
     return (
         <div className='container-fluid p-0'>
@@ -140,7 +145,7 @@ const Tank = (props:IPropsTank) => {
                 { 
                     (props)=>{
                         return (
-                            <Form className='container'>
+                            <Form onKeyDown={onKeyDown} className='container'>
                     <h1 className='mb-4 mt-4'>Tanques</h1>
                     <div className='row'>
                             <div className="form-group col-md-6">

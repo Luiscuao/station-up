@@ -8,11 +8,11 @@ import { IPropsHose, formSchema } from "./interface";
 import { ITile } from "../../../components/ListTile/interface";
 
 //Services
-/* import setAuthToken from "../../../api/setAuthToken"; */
+import setAuthToken from "../../../api/setAuthToken";
 import {getPumpByStation} from '../../../api/services/pumpService';
 import {getTankByStation} from '../../../api/services/tankService';
 import {getHoseByStation,createHose,deleteHose} from '../../../api/services/hoseService';
-/* import {finishConfigurationService} from '../../../api/services/finishConfigurationService' */
+import {finishConfigurationService} from '../../../api/services/finishConfigurationService'
 
 //Components
 import SelectSearch from "../../../components/SelectSearch";
@@ -126,12 +126,12 @@ const Hose = (props: IPropsHose) => {
   },[currentPump])
 
   const finished = () => {
-    /* finishConfigurationService(); */
-   /* 
+    finishConfigurationService();
+   
     localStorage.setItem("api-key", "");
     localStorage.setItem("idStation", "");
     setAuthToken("");
-    props.history.push("/"); */
+    props.history.push("/");
     
     toggleFinish();
     togglePrintData();
@@ -157,6 +157,11 @@ const Hose = (props: IPropsHose) => {
             console.log([station,...tanks]);
             return [station,...tanks]
   }
+  function onKeyDown(keyEvent) {
+    if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+      keyEvent.preventDefault();
+    }
+  }
   return (
     <div className="container-fluid p-0 mb-4">
       <Header />
@@ -178,7 +183,7 @@ const Hose = (props: IPropsHose) => {
         {
           (props)=>{
             return (
-              <Form className="container">
+              <Form onKeyDown={onKeyDown} className="container">
                 <div className="row">
                   <div className="form-group col-md-6">
                     <label>Tanque</label>

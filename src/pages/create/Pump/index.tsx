@@ -101,6 +101,11 @@ const Pump = (props:IPropsPump) => {
       showAlertError('El surtidor no pudo ser eliminado')
     })
 }
+function onKeyDown(keyEvent) {
+  if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+    keyEvent.preventDefault();
+  }
+}
   return (
     <div className="container-fluid p-0 mb-4">
       <Header />
@@ -110,7 +115,7 @@ const Pump = (props:IPropsPump) => {
         onSubmit={submitPump}
         validationSchema={formSchema}
       >
-        <Form className="container">
+        <Form onKeyDown={onKeyDown} className="container">
           <div className="row">
             <div className="form-group col-md-6">
               <label>Isla</label>

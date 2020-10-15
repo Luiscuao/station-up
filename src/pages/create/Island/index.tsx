@@ -59,6 +59,11 @@ const CreateIsland = (props: IPropsCreateIsland) => {
         });
         
     }
+    function onKeyDown(keyEvent) {
+        if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+          keyEvent.preventDefault();
+        }
+    }
     return (
         <>
         <Header />
@@ -69,7 +74,7 @@ const CreateIsland = (props: IPropsCreateIsland) => {
             validationSchema={formSchema}
         >
             
-            <Form className="container">
+            <Form className="container" onKeyDown={onKeyDown}>
                 
                 <div className="row">
                     <div className="col-12">

@@ -24,7 +24,7 @@ const Device = (props: IPropsDevice) => {
         androidDevice:"",
         androidId:"",
     }
-
+    
     const [island, setIsland] = useState<ITile[]>([]);
     const [refresh, setRefresh] = useState(0);
 
@@ -74,6 +74,11 @@ const Device = (props: IPropsDevice) => {
             showAlertError('error al eliminar dispositivo')
         })   
     }
+    function onKeyDown(keyEvent) {
+        if ((keyEvent.charCode || keyEvent.keyCode) === 13) {
+          keyEvent.preventDefault();
+        }
+    }
 
     return (
       <div className="container-fluid p-0">
@@ -84,7 +89,7 @@ const Device = (props: IPropsDevice) => {
                     initialValues={initialValues}
                     onSubmit={submit}
                 >
-                    <Form className='container'>
+                    <Form onKeyDown={onKeyDown} className='container'>
                         <div className='row'>
                             <div className="form-group col-md-6">
                                     <label htmlFor="input-android-model">Modelo</label>
