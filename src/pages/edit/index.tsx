@@ -1,5 +1,6 @@
 import React from 'react';
-import {withRouter} from 'react-router'
+import {withRouter} from 'react-router';
+import axios from 'axios';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 
 import setAuthToken from '../../api/setAuthToken'
@@ -14,15 +15,21 @@ const Edit = (props:IPropsEdit) => {
     const initialValues={
         apiKey:"",
         idStation:"",
+        ip:"",
     }
     const previous = ()=>{
-      props.history.push('/');
+      localStorage.setItem('ip', '');
       localStorage.setItem('idStation', '');
       localStorage.setItem('api-key', '');
+      props.history.push('/');
+      
     }
     const submit =  (values,{resetForm})=>{
       
-        const {apiKey,idStation} = values;
+        const {apiKey,idStation,ip} = values;
+        const host ="http://"+ip;
+        axios.defaults.baseURL = host;
+        localStorage.setItem('ip', host);
         setAuthToken(apiKey);
         validateKey()
         .then(()=>{
@@ -60,7 +67,7 @@ const Edit = (props:IPropsEdit) => {
           <Form onKeyDown={onKeyDown} className="container key-form__container">
             <h3 className="text-center mb-4">Modificacion de estaciones</h3>
             <div className="row">
-              <div className="col-6">
+              <div className="col-4">
                 <div className="form-group">
                   <label htmlFor="input_api-key">API-KEY</label>
                   <Field
@@ -77,7 +84,24 @@ const Edit = (props:IPropsEdit) => {
                   />
                 </div>
               </div>
-              <div className="col-6">
+              <div className="col-4">
+                <div className="form-group">
+                  <label htmlFor="input_ip">Ip del servidor</label>
+                  <Field
+                    type="text"
+                    placeholder=""
+                    name="ip"
+                    className="form-control"
+                    id="input_ip"
+                  />
+                  <ErrorMessage
+                    name="ip"
+                    component="small"
+                    className="field-error text-danger"
+                  />
+                </div>
+              </div>
+              <div className="col-4">
                 <div className="form-group">
                   <label htmlFor="input_id-station">Id Estacion</label>
                   <Field

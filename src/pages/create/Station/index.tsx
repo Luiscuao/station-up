@@ -13,6 +13,8 @@ import Header from '../../../components/Header';
 import Stepper from '../../../components/Stepper';
 import SelectSearch from '../../../components/SelectSearch';
 import Modal from '../../../components/Modal';
+
+import {stepsCreate} from "../../../constant/steps";
 const Station = (props:IPropsStation) => {
     const [modal,setModal] = useState(false);
     const toggle = () => setModal(!modal);
@@ -52,6 +54,7 @@ const Station = (props:IPropsStation) => {
     const confirm = ()=>{
         props.history.push('/create');
         localStorage.setItem("api-key", "");
+        localStorage.setItem("ip", "");
         setAuthToken("");
     }
     function onKeyDown(keyEvent) {
@@ -60,12 +63,13 @@ const Station = (props:IPropsStation) => {
         }
       }
     
+    
     return (
             <div className='container-fluid p-0'>
                 <Header />
-                <Stepper current={0}/>
+                <Stepper steps={stepsCreate} current={0}/>
                 <Modal modal={modal} toggle={toggle} confirm={confirm} cancel={true}>
-                    <strong>¿Deseas Cambiar  API-KEY ?</strong>
+                    <strong>¿Deseas Cambiar los parametros iniciales?</strong>
                 </Modal>
                 <Formik
                     validationSchema={formSchema}

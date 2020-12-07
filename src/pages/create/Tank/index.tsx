@@ -16,7 +16,7 @@ import ListTile from '../../../components/ListTile';
 //utils
 
 import {showAlertError,showAlertSuccess} from '../../../utils/toast';
-
+import {stepsCreate} from "../../../constant/steps";
 import {unitsToMeters} from '../../../utils/units-convertert';
 //Services
 import {getTankByStation,deleteTankByStation,createTank} from '../../../api/services/tankService'; 
@@ -134,7 +134,7 @@ const Tank = (props:IPropsTank) => {
     return (
         <div className='container-fluid p-0'>
             <Header />
-            <Stepper current={2}/>
+            <Stepper steps={stepsCreate} current={2}/>
             <Formik
                 initialValues={initialValues}
                 onSubmit={submit}

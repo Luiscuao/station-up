@@ -8,13 +8,16 @@ import {ITile} from '../../../components/ListTile/interface';
 //Components
 import Header from '../../../components/Header';
 import ListTile from '../../../components/ListTile';
+import Stepper from "../../../components/Stepper";
+import Modal from '../../../components/Modal';
 
 //services
-
+import setAuthToken from "../../../api/setAuthToken";
 import {getDeviceByStation,createDevice,deleteDevice} from '../../../api/services/deviceService'
 
 //utils
 import {showAlertError,showAlertSuccess} from '../../../utils/toast';
+import {stepsEdit} from "../../../constant/steps";
 
 const Device = (props: IPropsDevice) => {
     const initialValues={
@@ -26,7 +29,8 @@ const Device = (props: IPropsDevice) => {
 
     const [island, setIsland] = useState<ITile[]>([]);
     const [refresh, setRefresh] = useState(0);
-
+    const [modal,setModal] = useState(false);
+    const toggle = () => setModal(!modal);
     useEffect(()=>{
         (async ()=>{
             const id = localStorage.getItem('idStation')||'';
@@ -77,17 +81,25 @@ const Device = (props: IPropsDevice) => {
           keyEvent.preventDefault();
         }
       }
+    const confirm = ()=>{
+        localStorage.setItem("api-key", "");
+        localStorage.setItem("ip", "");
+        setAuthToken("");
+        props.history.push('/edit');
+    }
     return (
       <div className="container-fluid p-0">
         <Header />
-
+        <Stepper  steps={stepsEdit} current={0} />
+        <Modal modal={modal} toggle={toggle} confirm={confirm} cancel={true}>
+            <strong>¿Deseas Cambiar los Parametros Iniales?</strong>
+        </Modal>
         <Formik
                     validationSchema={formSchema}
                     initialValues={initialValues}
                     onSubmit={submit}
                 >
                     <Form onKeyDown={onKeyDown} className='container'>
-                        <h1 className="mt-4 mb-4">Dispositivos</h1>
                         <div className='row'>
                             <div className="form-group col-md-6">
                                     <label htmlFor="input-android-model">Modelo</label>
@@ -113,11 +125,11 @@ const Device = (props: IPropsDevice) => {
                                         className="form-control" 
                                         id="input-android-brand"
                                     />
-                                <ErrorMessage
+                                    <ErrorMessage
                                     name='androidBrand'
                                     component='small'
                                     className='field-error text-danger'
-                                />
+                                     />
                             </div>
                         </div>
                         <div className='row'>
@@ -153,8 +165,9 @@ const Device = (props: IPropsDevice) => {
                             </div>
                         </div>
                         <div className="col-12 d-flex justify-content-between mt-4">
-                            <button className="btn btn-primary" onClick={()=>props.history.push('/edit')}>Atras</button>
+                            <button className="btn btn-primary" type='button' onClick={toggle}>Atras</button>
                             <button className="btn btn-primary" type='submit'>Crear</button>
+                            <button className="btn btn-primary" type='button' onClick={()=>props.history.push('/edit/pump')}>Siguiente</button>
                         </div>
                         <div className="row mb-4 mt-4">
                         {   island.length?

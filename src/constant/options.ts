@@ -1,6 +1,6 @@
 export const factors = [
-    {value:'-1000',label:'-1000'} , {value:'-100',label:'-100'}, {value:'-10',label:'-10'} ,
-    {value:'1',label:'1'},{value:'10',label:'10'}, {value:'100',label:'100'},{value:'1000',label:'1000'}
+    {value:-1000,label:'-1000'} , {value:-100,label:'-100'}, {value:-10,label:'-10'} ,
+    {value:1,label:'1'},{value:10,label:'10'}, {value:100,label:'100'},{value:1000,label:'1000'}
 ];
 
 export const types_tank = [
@@ -13,8 +13,12 @@ export const protocolConcentrator = [
     {value:'2',label:'PROTOCOLO GILBARCO'},
 ];
 export const statePump = [
-    {value:'0',label:'Inactivo'} ,  
-    {value:'1',label:'Activo'},
+    {value:0,label:'Inactivo'} ,  
+    {value:1,label:'Activo'},
+];
+export const protocol = [
+    {value:'serial',label:'Serial'} ,  
+    {value:'tcp',label:'Tcp'},
 ];
 export const serialport = [
     {value:'1',label:'1'} ,  

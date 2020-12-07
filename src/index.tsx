@@ -6,7 +6,9 @@ import './styles/bootstrap.css';
 import setAuthToken from './api/setAuthToken';
 import axios from 'axios';
 
+
 axios.defaults.baseURL =localStorage.getItem("ip")|| "https://";
+
 
 const apiKey = localStorage.getItem("api-key");
 if(apiKey){
@@ -16,3 +18,4 @@ ReactDOM.render(
   <App />,
   document.getElementById('root')
 );
+

@@ -16,7 +16,7 @@ import ListTile from '../../../components/ListTile';
 
 //utils
 import {showAlertError,showAlertSuccess} from '../../../utils/toast';
-
+import {stepsCreate} from "../../../constant/steps";
 
 const CreateIsland = (props: IPropsCreateIsland) => {
     const [island, setIsland] = useState<ITile[]>([]);
@@ -67,7 +67,7 @@ const CreateIsland = (props: IPropsCreateIsland) => {
     return (
         <>
         <Header />
-        <Stepper current={3}/>
+        <Stepper steps={stepsCreate} current={3}/>
         <Formik
             initialValues={initialValues}
             onSubmit={submit}

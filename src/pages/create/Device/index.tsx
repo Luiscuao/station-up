@@ -16,6 +16,7 @@ import {getDeviceByStation,createDevice,deleteDevice} from '../../../api/service
 
 //utils
 import {showAlertError,showAlertSuccess} from '../../../utils/toast';
+import {stepsCreate} from "../../../constant/steps";
 
 const Device = (props: IPropsDevice) => {
     const initialValues={
@@ -83,7 +84,7 @@ const Device = (props: IPropsDevice) => {
     return (
       <div className="container-fluid p-0">
         <Header />
-        <Stepper current={1} />
+        <Stepper steps={stepsCreate} current={1} />
         <Formik
                     validationSchema={formSchema}
                     initialValues={initialValues}

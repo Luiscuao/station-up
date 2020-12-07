@@ -22,7 +22,7 @@ import ListTile from '../../../components/ListTile';
 
 //utils
 import {showAlertError,showAlertSuccess} from '../../../utils/toast';
-import {stepsCreate} from "../../../constant/steps";
+import {stepsEdit} from "../../../constant/steps";
 
 const Pump = (props:IPropsPump) => {
   const [pumps, setPumps] = useState<ITile[]>([]);
@@ -52,16 +52,12 @@ const Pump = (props:IPropsPump) => {
       const id = localStorage.getItem('idStation')||'';
       const responsePump = await getPumpByStation(id);
       const responseIsland = await getIslandByStation(id); 
-      const pump  = responsePump.map(pump => {
-      const name  = 'Surtidor '+pump.name;
-      const faceA = '| Caras: '+pump.faceAjump.name;
-      const faceB = ','+pump.faceBjump.name;
-      const faceC = pump.faceCjump? ','+pump.faceCjump.name:"";
-      const faceD = pump.faceDjump? ','+pump.faceDjump.name:"";
-      return ({
+      const pump = responsePump.map(pump => {
+      const name = 'Surtidor '+pump.name;
+       return ({
           title:name,
           id:pump._id,
-          subtitle:`Isla ${pump.island} | ${pump.core} ${faceA} ${faceB} ${faceC} ${faceD}`
+          subtitle:`Isla ${pump.island} | ${pump.core}`
         })
       });
       const island = responseIsland.map(island => ({value:island._id,label:'Isla '+island.name}));
@@ -160,7 +156,7 @@ function onKeyDown(keyEvent) {
   return (
     <div className="container-fluid p-0 mb-4">
       <Header />
-      <Stepper steps={stepsCreate} current={4} />
+      <Stepper  steps={stepsEdit} current={1} />
       <Formik
         initialValues={initialValues}
         onSubmit={submitPump}
@@ -408,13 +404,13 @@ function onKeyDown(keyEvent) {
           </div>
           <div className="row">
             <div className="col-12 d-flex justify-content-between mt-4">
-              <button onClick={()=>props.history.push('/create/island')} type="button" className="btn btn-primary">
+              <button onClick={()=>props.history.push('/edit/device')} type="button" className="btn btn-primary">
                 Anterior
               </button>
               <button type="submit" className="btn btn-primary">
                 Crear
               </button>
-              <button  onClick={()=>props.history.push('/create/hose')} type="button" className="btn btn-primary">
+              <button  onClick={()=>props.history.push('/edit/hose')} type="button" className="btn btn-primary">
                 Siguiente
               </button>
             </div>

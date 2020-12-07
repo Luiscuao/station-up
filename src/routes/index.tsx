@@ -11,6 +11,8 @@ import CreateIsland from '../pages/create/Island';
 import CreatePump from '../pages/create/Pump';
 import CreateHose from '../pages/create/Hose';
 import EditDevice from '../pages/edit/Device';
+import EditPump from '../pages/edit/Pump';
+import EditHose from '../pages/edit/Hose';
 import "react-toastify/dist/ReactToastify.css";
 const Routes = () => {
     return (
@@ -26,6 +28,8 @@ const Routes = () => {
             <Route exact path="/create/pump" component={CreatePump} />
             <Route exact path="/create/hose" component={CreateHose} />
             <Route exact path="/edit/device" component={EditDevice} />
+            <Route exact path="/edit/pump" component={EditPump} />
+            <Route exact path="/edit/hose" component={EditHose} />
         </Switch>
         <ToastContainer/>
     </HashRouter>

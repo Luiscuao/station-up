@@ -27,7 +27,7 @@ import Modal from "../../../components/Modal";
 
 //utils
 import { showAlertError, showAlertSuccess } from "../../../utils/toast";
-import {stepsCreate} from "../../../constant/steps"
+import {stepsEdit} from "../../../constant/steps";
 //Assets
 import iconColor from "../../../assets/icon/gas-station-color.png";
 import iconBalck from "../../../assets/icon/gas-black.png";
@@ -144,6 +144,8 @@ const Hose = (props: IPropsHose) => {
     const socketIp = localStorage.getItem("ip")||"";
     const socketIpFormat = socketIp.split(':')[1].substring(2);
     finishConfigurationService(socketIpFormat);
+
+    
     toggleFinish();
     togglePrintData();
   };
@@ -155,7 +157,7 @@ const Hose = (props: IPropsHose) => {
     localStorage.setItem("ip", "");
     props.history.push("/");
   };
-  const previous = () => props.history.push("/create/pump");
+  const previous = () => props.history.push("/edit/pump");
 
   const getTanksAndStation = () => {
     const id = localStorage.getItem("idStation") || "";
@@ -184,7 +186,7 @@ const Hose = (props: IPropsHose) => {
   return (
     <div className="container-fluid p-0 mb-4">
       <Header />
-      <Stepper steps={stepsCreate} current={5} />
+      <Stepper  steps={stepsEdit} current={2} />
 
       <Modal
         modal={modalFinish}
@@ -341,13 +343,13 @@ const Hose = (props: IPropsHose) => {
                       {props.values.degree === "3" ? (
                         <img
                           className="image-icon"
-                          src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775291/gas-station_2_nimm42.png"
+                          src={iconColor}
                           alt=""
                         />
                       ) : (
                         <img
                           className="image-icon"
-                          src="https://res.cloudinary.com/ds8crblmm/image/upload/v1599775281/gas_vibtuz.png"
+                          src={iconBalck}
                           alt=""
                         />
                       )}
@@ -376,7 +378,7 @@ const Hose = (props: IPropsHose) => {
               </div>
               <div className="row mb-4 mt-4">
                 {hose.length ? (
-                  <ListTile list={hose} onDelete={onDelete} />
+                  <ListTile list={hose} onDelete={onDelete}  isDelete={false}/>
                 ) : (
                   <div className="col-12">
                     <p className="text-muted text-center mb-4 mt-4 ">
