@@ -1,0 +1,12 @@
+.key-form__container{
+    height:82vh !important;
+    display: flex!important;
+    flex-direction: column !important;
+    justify-content: center !important;
+}
+
+.image-icon{
+    cursor: pointer;
+    width: 49px;
+    margin: 0px 15px;
+}

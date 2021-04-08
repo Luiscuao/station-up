@@ -5,7 +5,7 @@ export const validateKey = async ()=> {
    return  await axios(
         {
             method: "get",
-            url: url,
+            url,
         }
     )
 }

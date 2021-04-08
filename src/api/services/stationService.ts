@@ -13,3 +13,10 @@ export const createStation = async (data:any)=> {
         const {id} = station.data;
         localStorage.setItem('idStation', id);
 }
+export const getStation = async (id:string)=> {
+    const url="/stations/"+id
+    const station =  await axios.get(
+            url
+        );
+    return station.data;
+}

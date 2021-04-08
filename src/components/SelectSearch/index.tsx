@@ -24,10 +24,11 @@ const SelectSearch  = ({
   };
 
   const getValue = () => {
-    if (options) {
+    const optionsList = [{value:"",label:"Seleccione ...",},...options]
+    if (optionsList) {
       return isMulti
-        ? options.filter(option => field.value.indexOf(option.value) >= 0)
-        : options.find(option => option.value === field.value);
+        ? optionsList.filter(option => field.value.indexOf(option.value) >= 0)
+        : optionsList.find(option => option.value === field.value);
     } else {
       return isMulti ? [] : ("" as any);
     }
@@ -44,14 +45,16 @@ const SelectSearch  = ({
     }),
     
   };
+    const optionsList = [{value:"",label:"Seleccione ...",},...options]
     return (
       <Select
           className={className}
+          defaultValue= {optionsList[0]}
           name={field.name}
           value={getValue()}
           onChange={onChange}
           placeholder={placeholder}
-          options={options}
+          options={optionsList}
           isMulti={isMulti}
           styles={colourStyles}/>
     )
